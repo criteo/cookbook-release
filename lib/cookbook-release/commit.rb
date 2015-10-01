@@ -11,7 +11,7 @@ class Commit
   end
 
   def patch?
-    !!(self[:subject] =~ /\bfix\b/i)
+    !!(self[:subject] =~ /\bfix\b/i) || !!(self[:subject] =~ /\bbugfix\b/i)
   end
 
   def minor?
