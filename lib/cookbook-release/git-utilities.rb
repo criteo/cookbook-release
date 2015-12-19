@@ -27,14 +27,13 @@ class GitUtilities
 
   def compute_last_release
 
-    tag = Mixlib::ShellOut.new("git tag")
+    tag = Mixlib::ShellOut.new([
+      'git describe',
+      "--tags",
+      "--match \"#{@tag_prefix}[0-9]\.[0-9]*\.[0-9]*\""
+    ].join " ")
     tag.run_command
-    releases = tag.stdout.split("\n").
-      select { |t| t =~ /^\d+\.\d+\.\d+$/ }.
-      map { |t| t.gsub(/^#{@tag_prefix}/, '') }.
-      map { |t| t.to_version }
-
-    releases.sort[-1]
+    tag.stdout.split('-').first
   end
 
   def compute_changelog(since)
