@@ -20,11 +20,18 @@ module CookbookRelease
           Release.new(git).release!
         end
 
-        desc "Suggest new release number"
+        desc "Suggest new release version"
         task "cookbook:suggest-release" do
           git = GitUtilities.new
           release = Release.new(git)
           release.display_suggested_version(*release.new_version)
+        end
+
+        desc "Display last released version"
+        task "cookbook:suggest-release" do
+          git = GitUtilities.new
+          release = Release.new(git)
+          release.last_release
         end
 
         desc "Display changelog"
