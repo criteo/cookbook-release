@@ -51,22 +51,6 @@ class GitUtilities
     end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
   end
 
-  def mono_commit?(changelog)
-    changelog.size == 1
-  end
-
-  def commit(version, changelog)
-    if mono_commit?(changelog) # amend commit
-      options = "--amend --no-edit"
-    else # add a commit
-      message = "Release #{version}"
-      options = "-m \"#{message}\""
-    end
-    cmd = Mixlib::ShellOut.new("git commit -a #{options}")
-    cmd.run_command
-    cmd.error!
-  end
-
   def tag(version)
     cmd = Mixlib::ShellOut.new("git tag #{@tag_prefix}#{version}")
     cmd.run_command
@@ -88,16 +72,6 @@ class GitUtilities
   def push_tag(version)
     remote = choose_remote
     cmd = Mixlib::ShellOut.new("git push #{remote} #{@tag_prefix}#{version}")
-    cmd.run_command
-    cmd.error!
-
-    if mono_commit?
-      commit_before_amend = git_changelog.first[:hash]
-      force = "--force-with-lease=master:#{commit_before_amend}"
-    else
-      force = ""
-    end
-    cmd = Mixlib::ShellOut.new("git push #{remote} master #{force}")
     cmd.run_command
     cmd.error!
   end
