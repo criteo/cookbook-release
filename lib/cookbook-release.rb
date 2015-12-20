@@ -34,7 +34,7 @@ module CookbookRelease
           puts release.last_release
         end
 
-        desc "Display changelog"
+        desc "Display changelog since last release"
         task "cookbook:changelog" do
           git = GitUtilities.new
           release = Release.new(git)
