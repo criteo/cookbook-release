@@ -33,7 +33,7 @@ class GitUtilities
       "--match \"#{@tag_prefix}[0-9]\.[0-9]*\.[0-9]*\""
     ].join " ")
     tag.run_command
-    tag.stdout.split('-').first
+    tag.stdout.split('-').first.to_version
   end
 
   def compute_changelog(since)
