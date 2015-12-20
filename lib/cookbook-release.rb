@@ -28,10 +28,10 @@ module CookbookRelease
         end
 
         desc "Display last released version"
-        task "cookbook:suggest-release" do
+        task "cookbook:version" do
           git = GitUtilities.new
           release = Release.new(git)
-          release.last_release
+          puts release.last_release
         end
 
         desc "Display changelog"
