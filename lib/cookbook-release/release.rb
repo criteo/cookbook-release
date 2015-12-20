@@ -14,8 +14,9 @@ class Release
 
   attr_reader :git
 
-  def initialize(git)
-    @git = git
+  def initialize(git, opts={})
+    @git         = git
+    @no_prompt   = opts[:no_prompt]
   end
 
   def last_release
@@ -62,7 +63,8 @@ class Release
     puts "Last release was:  " + last_release.to_s
     display_suggested_version(new_version, reasons)
     puts ""
-    agreed = agree("Do you agree with that version?") { |q| q.default = "yes" }
+
+    agreed = @no_prompt || agree("Do you agree with that version?") { |q| q.default = "yes" }
     new_version = user_defined_version unless agreed
     puts "New release will be #{new_version}"
     puts ""
