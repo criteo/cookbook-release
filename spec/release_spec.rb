@@ -56,30 +56,4 @@ describe Release do
     end
   end
 
-  describe '.update_metadata' do
-
-    it 'update correctly metadata' do
-      content = <<-EOH.gsub(/^\s+/, '')
-      name             'rundeck-server'
-      maintainer       'Criteo'
-      maintainer_email 'g.seux@criteo.com'
-      license          'Apache License v2'
-      description      'Installs/Configures rundeck'
-      long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-      version          '6.5.0'
-      depends          'sysctl', '>= 0.2.0'
-      EOH
-      expect(::File).to receive(:exists?).and_return(true)
-      expect(::File).to receive(:read).and_return(content)
-
-      file = double('file')
-      expect(file).to receive(:write).with(content.gsub(/6.5.0/, '7.0.0'))
-      expect(::File).to receive(:open).and_yield(file)
-
-      release = Release.new(git)
-      release.update_metadata('7.0.0')
-      
-    end
-  end
-
 end

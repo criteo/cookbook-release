@@ -44,22 +44,6 @@ class Release
     end
   end
 
-  def update_metadata(version)
-    raise "metadata.rb not found" unless ::File.exists?('metadata.rb')
-    lines = ::File.read('metadata.rb').lines
-    ::File.open('metadata.rb', 'w+') do |file|
-      content = lines.map do |line|
-        case line
-        when /^version(\s+)('|")/
-          "version#{$1}'#{version}'\n"
-        else
-          line
-        end
-      end.join
-      file.write(content)
-    end
-  end
-
   def prepare_release
     git.clean_index!
     new_version , reasons = self.new_version
@@ -71,7 +55,6 @@ class Release
     puts "New release will be #{new_version}"
     puts ""
 
-    update_metadata(new_version)
     new_version
   end
 
