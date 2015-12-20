@@ -1,5 +1,17 @@
 class Release
 
+  def self.current_version
+    r = Release.new(GitUtilities.new)
+    begin
+      r.new_version.first
+    rescue ExistingRelease
+      r.last_release
+    end
+  end
+
+  class ExistingRelease < StandardError
+  end
+
   attr_reader :git
 
   def initialize(git)
@@ -20,7 +32,7 @@ class Release
       changes = git_changelog.select(&"#{level}?".to_sym)
       return [ last_release.send("#{level}!"), changes ] if changes.size > 0
     end
-    raise "No commit since last release (#{last_release})"
+    raise ExistingRelease, "No commit since last release (#{last_release})"
   end
 
   def user_defined_version
