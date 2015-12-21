@@ -22,7 +22,7 @@ describe Release do
       expect(git).to receive(:compute_changelog).and_return([])
 
       release = Release.new(git)
-      expect{release.new_version}.to raise_error(RuntimeError, /no commit since/i)
+      expect{release.new_version}.to raise_error(Release::ExistingRelease, /no commit since/i)
     end
 
     it 'suggests major release when one commit is major' do
