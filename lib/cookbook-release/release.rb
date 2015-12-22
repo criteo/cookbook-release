@@ -74,7 +74,6 @@ class Release
 
   def release!
     new_version = prepare_release
-    git.commit(new_version, git_changelog)
     begin
       git.tag(new_version)
       display_changelog(new_version)
@@ -82,6 +81,8 @@ class Release
       agreed = @no_prompt || agree("Do you agree with this changelog?") { |q| q.default = "yes" }
       exit 1 unless agreed
       git.push_tag(new_version)
+      supermarket = Supermarket.new
+      supermarket.publish_ck('Others')
     ensure
       puts HighLine.color("Release aborted, you have to reset to previous state manually", :red)
       puts ":use with care: #{git.reset_command(new_version)}"

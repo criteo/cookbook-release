@@ -1,5 +1,6 @@
 require_relative 'cookbook-release/commit'
 require_relative 'cookbook-release/git-utilities'
+require_relative 'cookbook-release/supermarket'
 require_relative 'cookbook-release/release'
 
 require 'rake'
@@ -21,7 +22,7 @@ module CookbookRelease
             no_prompt: ENV['NO_PROMPT']
           }
           git = GitUtilities.new
-          Release.new(git).release!
+          Release.new(git, opts).release!
         end
 
         desc "Suggest new release version"
