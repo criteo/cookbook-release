@@ -79,7 +79,7 @@ class Release
       git.tag(new_version)
       display_changelog(new_version)
       puts ""
-      agreed = agree("Do you agree with this changelog?") { |q| q.default = "yes" }
+      agreed = @no_prompt || agree("Do you agree with this changelog?") { |q| q.default = "yes" }
       exit 1 unless agreed
       git.push_tag(new_version)
     ensure
