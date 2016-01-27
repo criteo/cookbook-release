@@ -1,7 +1,11 @@
 require_relative 'spec_helper'
 
 describe Release do
-  let(:git) { double('git') }
+  let(:git) do
+    g = double('git')
+    allow(g).to receive(:no_prompt=)
+    g
+  end
 
   levels = %w(major minor patch)
   levels.each do |l|
@@ -14,6 +18,7 @@ describe Release do
       m
     end
   end
+
 
   describe '.new_version' do
 
