@@ -17,6 +17,7 @@ class Release
   def initialize(git, opts={})
     @git         = git
     @no_prompt   = opts[:no_prompt]
+    @git.no_prompt = @no_prompt
   end
 
   def last_release

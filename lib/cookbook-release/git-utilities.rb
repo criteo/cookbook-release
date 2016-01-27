@@ -5,6 +5,8 @@ require 'highline/import'
 
 class GitUtilities
 
+  attr_accessor :no_prompt
+
   def initialize(options={})
     @tag_prefix = options['tag_prefix'] || ''
   end
@@ -62,7 +64,8 @@ class GitUtilities
     cmd.run_command
     cmd.error!
     remotes = cmd.stdout.split("\n")
-    if remotes.size == 1
+    if remotes.size == 1 || @no_prompt
+      puts "Choosing remote #{remotes.first}" if @no_prompt
       remotes.first
     else
       choose(*remotes)
