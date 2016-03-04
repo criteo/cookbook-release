@@ -33,4 +33,10 @@ export NO_PROMPT=""
 rake release!
 ```
 
+Optional environment variables:
+
+```
+export COOKBOOK_CATEGORY="Other" # defaults to Other
+```
+
 Note: this setup is intended to be used in a CI system such as jenkins or travis.

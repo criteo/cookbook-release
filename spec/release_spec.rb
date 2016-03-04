@@ -19,6 +19,32 @@ describe Release do
     end
   end
 
+  describe '.release!' do
+    it 'calls category with a valid default category' do
+
+      c = double('c',
+                 :major? => true,
+                 :[]     => '',
+                 :color  => :red,
+                )
+      git = double('git',
+                   :clean_index! => true,
+                   :compute_last_release => '1.0.0'.to_version,
+                   :compute_changelog => [c],
+                   :tag => true,
+                   :push_tag => true,
+                  )
+      allow(git).to receive(:no_prompt=)
+      release = Release.new(git, no_prompt: true)
+
+      supermarket = double('supermarket')
+      expect(Supermarket).to receive(:new).and_return(supermarket)
+
+      expect(supermarket).to receive(:publish_ck).with('Other')
+      release.release!
+    end
+  end
+
 
   describe '.new_version' do
 
