@@ -41,13 +41,17 @@ class GitUtilities
     tag.stdout.split('-').first.to_version
   end
 
+  # This string is used to split one-line git commit summary
+  # it just needs to be unlikely in a commit message
+  MAGIC_SEP = '@+-+@+-+@+-+@'
+
   def compute_changelog(since)
     # TODO use whole commit message instead of title only
-    log_cmd = Mixlib::ShellOut.new("git log --pretty='format:%an <%ae>::%s::%h' #{since}..HEAD", @shellout_opts)
+    log_cmd = Mixlib::ShellOut.new("git log --pretty='format:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h' #{since}..HEAD", @shellout_opts)
     log_cmd.run_command
     log = log_cmd.stdout
     log.split("\n").map do |entry|
-      author, subject, hash = entry.chomp.split("::")
+      author, subject, hash = entry.chomp.split(MAGIC_SEP)
       Commit.new({
         author: author,
         subject: subject,
