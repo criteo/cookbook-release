@@ -1,7 +1,8 @@
 class Release
 
-  def self.current_version
-    r = Release.new(GitUtilities.new)
+  # file will be used to determine the git directory
+  def self.current_version(file)
+    r = Release.new(GitUtilities.new(cwd: File.dirname(file)))
     begin
       r.new_version.first
     rescue ExistingRelease
