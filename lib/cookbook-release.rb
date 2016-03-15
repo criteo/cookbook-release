@@ -19,7 +19,8 @@ module CookbookRelease
         desc "Prepare cookbook release and push tag to git"
         task "release!" do
           opts = {
-            no_prompt: ENV['NO_PROMPT']
+            no_prompt: ENV['NO_PROMPT'],
+            category: ENV['COOKBOOK_CATEGORY'],
           }
           git = GitUtilities.new
           Release.new(git, opts).release!

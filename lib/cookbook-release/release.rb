@@ -19,6 +19,7 @@ class Release
     @git         = git
     @no_prompt   = opts[:no_prompt]
     @git.no_prompt = @no_prompt
+    @category    = opts[:category] || 'Other'
   end
 
   def last_release
@@ -84,10 +85,11 @@ class Release
       exit 1 unless agreed
       git.push_tag(new_version)
       supermarket = Supermarket.new
-      supermarket.publish_ck('Others')
-    ensure
+      supermarket.publish_ck(@category)
+    rescue
       puts HighLine.color("Release aborted, you have to reset to previous state manually", :red)
       puts ":use with care: #{git.reset_command(new_version)}"
+      raise
     end
   end
 end
