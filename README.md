@@ -1,6 +1,9 @@
 CookbookRelease
 ===============
 
+[![Build Status](https://travis-ci.org/criteo/cookbook-release.svg?branch=master)](https://travis-ci.org/criteo/cookbook-release)
+[![Gem Version](https://badge.fury.io/rb/cookbook-release.svg)](https://badge.fury.io/rb/cookbook-release)
+
 Helper to release cookbooks. This motivation is to publish new version at each commit on master branch from the CI.
 
 This helper will create tags, push them and publish to supermarket.
