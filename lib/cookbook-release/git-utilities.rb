@@ -14,6 +14,10 @@ class GitUtilities
     }
   end
 
+  def self.git?(dir)
+    !Mixlib::ShellOut.new('git status', cwd: dir).run_command.error?
+  end
+
   def reset_command(new_version)
     "git reset --hard HEAD^ && git tag -d #{new_version}"
   end

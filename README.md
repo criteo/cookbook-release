@@ -16,7 +16,8 @@ Include cookbook-release into your `Gemfile`.
 Require cookbook-release into the `metadata.rb` file and replace the version by the helper:
 
 ```
-version          Release.current_version
+require 'cookbook-release'
+version          Release.current_version(__FILE__)
 ```
 
 Include the rake tasks in your Rakefile:
@@ -33,6 +34,7 @@ export SUPERMARKET_CLIENTKEYFILE=/tmp/my_key.pem
 export SUPERMARKET_USERID=my_username
 export SUPERMARKET_URL="http://supermarket.chef.io/api/v1/cookbooks"
 export NO_PROMPT=""
+export SUPERMARKET_NO_SSL_VERIFY=1
 rake release!
 ```
 

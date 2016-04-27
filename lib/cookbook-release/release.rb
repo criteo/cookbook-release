@@ -2,12 +2,17 @@ class Release
 
   # file will be used to determine the git directory
   def self.current_version(file)
-    r = Release.new(GitUtilities.new(cwd: File.dirname(file)))
+    dir = File.dirname(file)
+    version_file = File.join(dir, '.cookbook_version')
+
+    return File.read(version_file) if !GitUtilities.git?(dir) && File.exist?(version_file)
+
+    r = Release.new(GitUtilities.new(cwd: dir))
     begin
       r.new_version.first
     rescue ExistingRelease
       r.last_release
-    end
+    end.tap { |v| File.write(version_file, v) }
   end
 
   class ExistingRelease < StandardError
