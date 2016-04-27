@@ -33,6 +33,7 @@ export SUPERMARKET_CLIENTKEYFILE=/tmp/my_key.pem
 export SUPERMARKET_USERID=my_username
 export SUPERMARKET_URL="http://supermarket.chef.io/api/v1/cookbooks"
 export NO_PROMPT=""
+export SUPERMARKET_NO_SSL_VERIFY=1
 rake release!
 ```
 

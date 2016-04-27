@@ -14,6 +14,7 @@ class Supermarket
     @url        = opts[:url] || ENV['SUPERMARKET_URL'] || (raise "Require a supermarket url")
     @user_id    = opts[:user_id] || ENV['SUPERMARKET_USERID'] || (raise "Require a user id")
     @client_key = opts[:client_key_file] || ENV['SUPERMARKET_CLIENTKEYFILE'] || (raise "Require a client key file")
+    Chef::Config[:ssl_verify_mode] = :verify_none if ENV['SUPERMARKET_NO_SSL_VERIFY']
   end
 
   include ::Chef::Mixin::ShellOut
