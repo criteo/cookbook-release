@@ -16,7 +16,8 @@ Include cookbook-release into your `Gemfile`.
 Require cookbook-release into the `metadata.rb` file and replace the version by the helper:
 
 ```
-version          Release.current_version
+require 'cookbook-release'
+version          Release.current_version(__FILE__)
 ```
 
 Include the rake tasks in your Rakefile:
