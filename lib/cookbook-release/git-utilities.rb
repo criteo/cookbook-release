@@ -19,7 +19,8 @@ class GitUtilities
   end
 
   def reset_command(new_version)
-    "git reset --hard HEAD^ && git tag -d #{new_version}"
+    remote = choose_remote
+    "git tag -d #{new_version} ; git push #{remote} :#{new_version}"
   end
 
   def clean_index?
