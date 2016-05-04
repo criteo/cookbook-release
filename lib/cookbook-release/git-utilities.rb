@@ -52,7 +52,7 @@ class GitUtilities
 
   def compute_changelog(since)
     # TODO use whole commit message instead of title only
-    log_cmd = Mixlib::ShellOut.new("git log --pretty='format:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h' #{since}..HEAD", @shellout_opts)
+    log_cmd = Mixlib::ShellOut.new("git log --pretty=\"format:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h\" #{since}..HEAD", @shellout_opts)
     log_cmd.run_command
     log = log_cmd.stdout
     log.split("\n").map do |entry|
