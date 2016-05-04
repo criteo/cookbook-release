@@ -43,7 +43,12 @@ class GitUtilities
       "--match \"#{@tag_prefix}[0-9]\.[0-9]*\.[0-9]*\""
     ].join(" "), @shellout_opts)
     tag.run_command
-    tag.stdout.split('-').first.to_version
+    last = tag.stdout.split('-').first
+    unless last
+      $stderr.puts "No last release found, defaulting to 0.1.0"
+      last = '0.1.0'
+    end
+    last.to_version
   end
 
   # This string is used to split one-line git commit summary
