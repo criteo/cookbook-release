@@ -8,7 +8,27 @@ Helper to release cookbooks. This motivation is to publish new version at each c
 
 This helper will create tags, push them and publish to supermarket.
 
-Usage
+Daily use
+---------
+
+cookbook-release reads commit messages since last release and suggest a new version accordingly.
+
+The following table describes the word used to detect patch/minor/major version changes:
+
+| Version change | Words                                     |
+|----------------|-------------------------------------------|
+| Patch          | _fix_, _bugfix_, _[Patch]_                |
+| Major          | _breaking_, _[Major]_                     |
+| Minor          | Default case if none of the above matches |
+
+Those words are detected in the commit subject only (not in the fully message).
+
+Examples of messages:
+- [Breaking] Remove all migration code
+- Fix migration code for old centos versions
+
+
+One-time setup
 -----
 
 Include cookbook-release into your `Gemfile`.

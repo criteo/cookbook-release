@@ -7,11 +7,22 @@ class Commit
   end
 
   def major?
-    !!(self[:subject] =~ /breaking/i)
+    [
+      /breaking/i,
+      /\[major\]/i
+    ].any? do |r|
+      self[:subject] =~ r
+    end
   end
 
   def patch?
-    !!(self[:subject] =~ /\bfix\b/i) || !!(self[:subject] =~ /\bbugfix\b/i)
+    [
+      /\bfix\b/i,
+      /\bbugfix\b/i,
+      /\[patch\]/i
+    ].any? do |r|
+      self[:subject] =~ r
+    end
   end
 
   def minor?
