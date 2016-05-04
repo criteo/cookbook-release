@@ -6,7 +6,7 @@ require 'English'
 
 Gem::Specification.new do |spec|
   spec.name          = 'cookbook-release'
-  spec.version       = '0.4.2'
+  spec.version       = '0.4.3'
   spec.authors       = ['Grégoire Seux']
   spec.email         = 'g.seux@criteo.com'
   spec.summary       = 'Provide primitives (and rake tasks) to release a cookbook'
