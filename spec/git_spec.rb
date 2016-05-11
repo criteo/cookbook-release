@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 require 'mixlib/shellout'
 require 'fileutils'
 
-describe GitUtilities do
+describe CookbookRelease::GitUtilities do
   before(:each) do
     @tmp = Dir.mktmpdir('cookbook-release')
     @old_dir = Dir.pwd
@@ -25,7 +25,7 @@ describe GitUtilities do
     FileUtils.rm_rf(@tmp)
   end
 
-  let(:git) { GitUtilities.new }
+  let(:git) { CookbookRelease::GitUtilities.new }
 
   describe '.clean_index(?|!)' do
     it 'detects clean index' do

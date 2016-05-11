@@ -38,7 +38,7 @@ describe Release do
       release = Release.new(git, no_prompt: true)
 
       supermarket = double('supermarket')
-      expect(Supermarket).to receive(:new).and_return(supermarket)
+      expect(CookbookRelease::Supermarket).to receive(:new).and_return(supermarket)
 
       expect(supermarket).to receive(:publish_ck).with('Other')
       release.release!

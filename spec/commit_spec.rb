@@ -1,10 +1,10 @@
 require_relative 'spec_helper'
 
-describe Commit do
+describe CookbookRelease::Commit do
 
-  let(:breaking_change) { Commit.new(subject: '[Breaking] Removed thing') }
-  let(:fix_change) { Commit.new(subject: 'This is a fix') }
-  let(:minor_change) { Commit.new(subject: 'This introduces a feature') }
+  let(:breaking_change) { CookbookRelease::Commit.new(subject: '[Breaking] Removed thing') }
+  let(:fix_change) { CookbookRelease::Commit.new(subject: 'This is a fix') }
+  let(:minor_change) { CookbookRelease::Commit.new(subject: 'This introduces a feature') }
 
   describe '.(major|patch|minor)?' do
     it 'detects major changes' do

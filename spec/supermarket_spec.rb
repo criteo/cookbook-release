@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe Supermarket do
+describe CookbookRelease::Supermarket do
   let (:opts) do
     { user_id: 'a_name', client_key_file: 'a_file',
       url: 'http://a_url' }
@@ -34,7 +34,7 @@ version          '2.0.0'
   describe '.pusblish_ck' do
     it 'publish to supermarket' do
       init_cookbook
-      s = Supermarket.new(opts)
+      s = CookbookRelease::Supermarket.new(opts)
       response = double('http response',
         body: "{}",
         code: "201"
