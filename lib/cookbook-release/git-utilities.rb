@@ -16,11 +16,7 @@ module CookbookRelease
     end
 
     def self.git?(dir)
-      !Mixlib::ShellOut.new(
-        'git status',
-        cwd: dir,
-        environment: { GIT_DIR: dir }
-      ).run_command.error?
+      File.directory?(::File.join(dir, '.git'))
     end
 
     def reset_command(new_version)
