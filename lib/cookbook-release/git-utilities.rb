@@ -52,23 +52,26 @@ module CookbookRelease
       last.to_version
     end
 
-    # This string is used to split one-line git commit summary
+    # These string are used to split git commit summary
     # it just needs to be unlikely in a commit message
-    MAGIC_SEP = '@+-+@+-+@+-+@'
+    MAGIC_SEP        = '@+-+@+-+@+-+@'
+    MAGIC_COMMIT_SEP = '@===@===@===@'
 
     def compute_changelog(since)
-      # TODO use whole commit message instead of title only
-      log_cmd = Mixlib::ShellOut.new("git log --pretty=\"format:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h\" #{since}..HEAD", @shellout_opts)
+      log_cmd = Mixlib::ShellOut.new("git log --pretty=\"tformat:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h#{MAGIC_SEP}%b#{MAGIC_COMMIT_SEP}\" #{since}..HEAD", @shellout_opts)
       log_cmd.run_command
+      log_cmd.error!
       log = log_cmd.stdout
-      log.split("\n").map do |entry|
-        author, subject, hash = entry.chomp.split(MAGIC_SEP)
+      log.split(MAGIC_COMMIT_SEP).map do |entry|
+        next if entry.chomp == ''
+        author, subject, hash, body = entry.chomp.split(MAGIC_SEP)
         Commit.new({
           author: author,
           subject: subject,
-          hash: hash
+          hash: hash,
+          body: body
         })
-      end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
+      end.compact.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
     end
 
     def tag(version)

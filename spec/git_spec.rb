@@ -103,7 +103,7 @@ describe CookbookRelease::GitUtilities do
       end
 
       changelog = git.compute_changelog('1.0.0')
-      expect(changelog.size).to be(3)
+      expect(changelog.size).to eq(3)
       expect(changelog.map {|c| c[:subject]}).to contain_exactly('A commit', 'Another commit', 'A third one')
     end
   end
