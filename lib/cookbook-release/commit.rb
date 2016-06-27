@@ -30,13 +30,31 @@ module CookbookRelease
       !(major? || patch?)
     end
 
+    def risky?
+      !!(self[:subject] =~ /\[risky\]/i)
+    end
+
     def color
       case true
       when major?
         :red
+      when risky?
+        :red
       else
         :grey
       end
+    end
+
+    def to_s_oneline
+      "#{self[:hash]} #{self[:author]} #{self[:subject]}"
+    end
+
+    def to_s_html
+      <<-EOH
+<font color=#{color.to_s}>
+  #{self[:hash]} #{self[:author]} #{self[:subject]}
+</font>
+      EOH
     end
 
   end

@@ -2,12 +2,34 @@ require_relative 'cookbook-release/commit'
 require_relative 'cookbook-release/git-utilities'
 require_relative 'cookbook-release/supermarket'
 require_relative 'cookbook-release/release'
+require_relative 'cookbook-release/changelog'
 
 require 'rake'
 require 'rake/tasklib'
 
 module CookbookRelease
   module Rake
+
+    class RepoTask < ::Rake::TaskLib
+      def initialize
+        define_tasks
+      end
+
+      def define_tasks
+        desc "Display raw changelog between branches"
+        task "changelog:raw" do
+          git = GitUtilities.new
+          puts Changelog.new(git).raw
+        end
+
+        desc "Display html changelog between branches"
+        task "changelog:html" do
+          git = GitUtilities.new
+          puts Changelog.new(git).html
+        end
+      end
+    end
+
     class CookbookTask < ::Rake::TaskLib
 
       def initialize(namespaced=false)
