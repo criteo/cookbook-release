@@ -11,21 +11,21 @@ module CookbookRelease
   module Rake
 
     class RepoTask < ::Rake::TaskLib
-      def initialize
-        define_tasks
-      end
-
-      def define_tasks
+      def initialize(opts = {}, &html_block)
         desc "Display raw changelog between branches"
         task "changelog:raw" do
           git = GitUtilities.new
-          puts Changelog.new(git).raw
+          puts Changelog.new(git, opts).raw
         end
 
         desc "Display html changelog between branches"
         task "changelog:html" do
           git = GitUtilities.new
-          puts Changelog.new(git).html
+          html = Changelog.new(git, opts).html
+          if block_given?
+            html = html_block.call(html)
+          end
+          puts html
         end
       end
     end

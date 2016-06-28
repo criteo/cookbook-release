@@ -1,7 +1,14 @@
 module CookbookRelease
   class Changelog
-    def initialize(git)
+
+    DEFAULT_OPTS = {
+      expand_major: true,
+      expand_risky: true,
+    }
+
+    def initialize(git, opts = {})
       @git = git
+      @opts = DEFAULT_OPTS.merge(opts)
     end
 
     def raw
@@ -15,7 +22,9 @@ module CookbookRelease
   <body>
       EOH
       result << changelog.map do |c|
-        full_body = c.risky? || c.major?
+        full_body ||= @opts[:expand_major] && c.major?
+        full_body ||= @opts[:expand_risky] && c.risky?
+        full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
         c.to_s_html(full_body)
       end.map { |c| "    <p>#{c}</p>" }
       result <<  <<-EOH
