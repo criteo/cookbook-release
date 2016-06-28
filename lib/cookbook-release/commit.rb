@@ -49,12 +49,22 @@ module CookbookRelease
       "#{self[:hash]} #{self[:author]} #{self[:subject]}"
     end
 
-    def to_s_html
-      <<-EOH
+    def to_s_html(full)
+      result = []
+      result << <<-EOH
 <font color=#{color.to_s}>
   #{self[:hash]} #{self[:author]} #{self[:subject]}
 </font>
       EOH
+      if full && self[:body]
+        result << <<-EOH
+<pre>
+#{self[:body]}
+</pre>
+        EOH
+      end
+
+      result.join("\n")
     end
 
   end

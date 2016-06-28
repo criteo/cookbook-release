@@ -14,7 +14,10 @@ module CookbookRelease
 <html>
   <body>
       EOH
-      result << changelog.map(&:to_s_html).map { |c| "    <p>#{c}</p>" }
+      result << changelog.map do |c|
+        full_body = c.risky? || c.major?
+        c.to_s_html(full_body)
+      end.map { |c| "    <p>#{c}</p>" }
       result <<  <<-EOH
   </body>
 </html>
