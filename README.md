@@ -28,7 +28,7 @@ Examples of messages:
 - Fix migration code for old centos versions
 
 
-One-time setup
+One-time setup (for cookbooks)
 -----
 
 Include cookbook-release into your `Gemfile`.
@@ -65,3 +65,15 @@ export COOKBOOK_CATEGORY="Other" # defaults to Other
 ```
 
 Note: this setup is intended to be used in a CI system such as jenkins or travis.
+
+
+Changelog generation for chef-repositories
+----
+
+Using:
+```
+require 'cookbook-release'
+CookbookRelease::Rake::RepoTask.new
+```
+
+will allow to create tasks to generate html changelog between HEAD and master branch. It aims to make some changes more visible such as [Risky] tag (or any tag used for major changes).
