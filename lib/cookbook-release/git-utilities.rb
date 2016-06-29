@@ -64,7 +64,7 @@ module CookbookRelease
       log = log_cmd.stdout
       log.split(MAGIC_COMMIT_SEP).map do |entry|
         next if entry.chomp == ''
-        author, subject, hash, body = entry.chomp.split(MAGIC_SEP)
+        author, subject, hash, body = entry.chomp.split(MAGIC_SEP).map(&:chomp)
         Commit.new({
           author: author,
           subject: subject,
