@@ -37,7 +37,8 @@ module CookbookRelease
     private
 
     def changelog
-      @git.compute_changelog('master')
+      ref = ENV['RELEASE_BRANCH'] || 'origin/master'
+      @git.compute_changelog(ref)
     end
 
   end
