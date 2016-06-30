@@ -31,6 +31,7 @@ describe Release do
                    :clean_index! => true,
                    :compute_last_release => '1.0.0'.to_version,
                    :compute_changelog => [c],
+                   :has_any_release? => true,
                    :tag => true,
                    :push_tag => true,
                   )
@@ -51,6 +52,7 @@ describe Release do
     it 'raise when no commit has been made since last release' do
       allow(git).to receive(:compute_last_release).and_return('1.0.1'.to_version)
       expect(git).to receive(:compute_changelog).and_return([])
+      expect(git).to receive(:has_any_release?).and_return(true)
 
       release = Release.new(git)
       expect{release.new_version}.to raise_error(Release::ExistingRelease, /no commit since/i)
@@ -59,6 +61,7 @@ describe Release do
     it 'suggests major release when one commit is major' do
       allow(git).to receive(:compute_last_release).and_return('1.0.1'.to_version)
       expect(git).to receive(:compute_changelog).and_return([minor, minor, major, patch])
+      expect(git).to receive(:has_any_release?).and_return(true)
 
       release = Release.new(git)
       new_version, reasons = release.new_version
@@ -69,6 +72,7 @@ describe Release do
     it 'suggests minor release when one commit is minor' do
       allow(git).to receive(:compute_last_release).and_return('1.0.1'.to_version)
       expect(git).to receive(:compute_changelog).and_return([minor, minor, patch, patch])
+      expect(git).to receive(:has_any_release?).and_return(true)
 
       release = Release.new(git)
       new_version, reasons = release.new_version
@@ -79,6 +83,7 @@ describe Release do
     it 'suggests patch release when all commits are patches' do
       allow(git).to receive(:compute_last_release).and_return('1.0.1'.to_version)
       expect(git).to receive(:compute_changelog).and_return([patch, patch, patch])
+      expect(git).to receive(:has_any_release?).and_return(true)
 
       release = Release.new(git)
       new_version, reasons = release.new_version

@@ -38,6 +38,7 @@ module CookbookRelease
 
     # return the new version and the reasons
     def new_version
+      return ['0.1.0'.to_version, []] unless git.has_any_release?
       %w(major minor patch).each do |level|
         changes = git_changelog.select(&"#{level}?".to_sym)
         return [ last_release.send("#{level}!"), changes ] if changes.size > 0

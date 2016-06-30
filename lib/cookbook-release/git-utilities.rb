@@ -36,15 +36,22 @@ module CookbookRelease
       raise "All changes must be committed!" unless clean_index?
     end
 
-    def compute_last_release
-
+    def _compute_last_release
       tag = Mixlib::ShellOut.new([
         'git describe',
         "--tags",
         "--match \"#{@tag_prefix}[0-9]\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
-      last = tag.stdout.split('-').first
+      tag.stdout.split('-').first
+    end
+
+    def has_any_release?
+      !!_compute_last_release
+    end
+
+    def compute_last_release
+      last = _compute_last_release
       unless last
         $stderr.puts "No last release found, defaulting to 0.1.0"
         last = '0.1.0'
