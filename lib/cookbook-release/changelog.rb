@@ -34,12 +34,22 @@ module CookbookRelease
       result.join("\n")
     end
 
+    def markdown
+      result = []
+      result << changelog.map do |c|
+        full_body ||= @opts[:expand_major] && c.major?
+        full_body ||= @opts[:expand_risky] && c.risky?
+        full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
+        c.to_s_markdown(full_body)
+      end
+      result.join("\n")
+    end
+
     private
 
     def changelog
       ref = ENV['RELEASE_BRANCH'] || 'origin/master'
       @git.compute_changelog(ref)
     end
-
   end
 end

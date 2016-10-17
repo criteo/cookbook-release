@@ -17,4 +17,31 @@ describe CookbookRelease::Changelog do
     end
   end
 
+  describe '.md' do
+    it 'add formatting' do
+      expect(git).to receive(:compute_changelog).and_return(
+        [
+          CookbookRelease::Commit.new(
+            hash: '123456',
+            subject: 'hello',
+            author: 'John Doe')
+        ]
+      )
+      changelog = CookbookRelease::Changelog.new(git)
+      expect(changelog.markdown).to eq('*123456* _John Doe_ `hello`')
+    end
+    it 'expand body' do
+      expect(git).to receive(:compute_changelog).and_return(
+        [
+          CookbookRelease::Commit.new(
+            hash: '654321',
+            subject: '[Risky] hello',
+            author: 'John Doe',
+            body: 'Some Men Just Want to Watch the World Burn')
+        ]
+      )
+      changelog = CookbookRelease::Changelog.new(git, expand_risky: true)
+      expect(changelog.markdown).to include("\n```\nSome Men Just Want")
+    end
+  end
 end
