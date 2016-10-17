@@ -2,6 +2,7 @@ require 'semantic'
 require 'semantic/core_ext'
 require 'mixlib/shellout'
 require 'highline/import'
+require 'git'
 
 module CookbookRelease
   class GitUtilities
@@ -10,13 +11,15 @@ module CookbookRelease
 
     def initialize(options={})
       @tag_prefix = options[:tag_prefix] || ''
+      cwd = options[:cwd] || Dir.pwd
       @shellout_opts = {
-        cwd: options[:cwd]
+        cwd: cwd
       }
+      @g = Git.open(cwd)
     end
 
     def self.git?(dir)
-      File.directory?(::File.join(dir, '.git'))
+      @g.index.readable?
     end
 
     def reset_command(new_version)
@@ -59,32 +62,20 @@ module CookbookRelease
       last.to_version
     end
 
-    # These string are used to split git commit summary
-    # it just needs to be unlikely in a commit message
-    MAGIC_SEP        = '@+-+@+-+@+-+@'
-    MAGIC_COMMIT_SEP = '@===@===@===@'
-
     def compute_changelog(since)
-      log_cmd = Mixlib::ShellOut.new("git log --pretty=\"tformat:%an <%ae>#{MAGIC_SEP}%s#{MAGIC_SEP}%h#{MAGIC_SEP}%b#{MAGIC_COMMIT_SEP}\" #{since}..HEAD", @shellout_opts)
-      log_cmd.run_command
-      log_cmd.error!
-      log = log_cmd.stdout
-      log.split(MAGIC_COMMIT_SEP).map do |entry|
-        next if entry.chomp == ''
-        author, subject, hash, body = entry.chomp.split(MAGIC_SEP).map(&:chomp)
-        Commit.new({
-          author: author,
-          subject: subject,
-          hash: hash,
-          body: body
-        })
-      end.compact.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
+      commits = @g.log.between(since, 'HEAD').map do |commit|
+        message = commit.message.lines.compact
+        Commit.new(
+          author: commit.author.name,
+          subject: message.delete_at(0),
+          hash: commit.sha,
+          body: message
+        )
+      end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
     end
 
     def tag(version)
-      cmd = Mixlib::ShellOut.new("git tag #{@tag_prefix}#{version}", @shellout_opts)
-      cmd.run_command
-      cmd.error!
+      @g.add_tag("#{@tag_prefix}#{version}")
     end
 
     def choose_remote

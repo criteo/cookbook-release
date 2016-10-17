@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'highline'
   spec.add_dependency 'mixlib-shellout'
   spec.add_dependency 'chef'
+  spec.add_dependency 'git'
 
 
   spec.add_development_dependency 'rspec'
