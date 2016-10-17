@@ -27,6 +27,12 @@ module CookbookRelease
           end
           puts html
         end
+
+        desc 'Display markdown changelog between branches'
+        task 'changelog:markdown' do
+          git = GitUtilities.new
+          puts Changelog.new(git, opts).markdown
+        end
       end
     end
 
