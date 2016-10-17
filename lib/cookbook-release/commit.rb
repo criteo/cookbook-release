@@ -67,5 +67,10 @@ module CookbookRelease
       result.join("\n")
     end
 
+    def to_s_markdown(full)
+      result = "*#{self[:hash]}* _#{self[:author]}_ `#{self[:subject]}`"
+      result << "\n```\n#{self[:body]}\n```" if full && self[:body]
+      result
+    end
   end
 end
