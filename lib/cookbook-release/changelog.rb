@@ -35,14 +35,12 @@ module CookbookRelease
     end
 
     def markdown
-      result = []
-      result << changelog.map do |c|
+      changelog.map do |c|
         full_body ||= @opts[:expand_major] && c.major?
         full_body ||= @opts[:expand_risky] && c.risky?
         full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
         c.to_s_markdown(full_body)
-      end
-      result.join("\n")
+      end.join("\n")
     end
 
     private
