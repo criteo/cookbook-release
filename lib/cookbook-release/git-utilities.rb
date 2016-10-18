@@ -64,12 +64,12 @@ module CookbookRelease
 
     def compute_changelog(since)
       commits = @g.log.between(since, 'HEAD').map do |commit|
-        message = commit.message.lines.compact
+        message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
           subject: message.delete_at(0),
           hash: commit.sha,
-          body: message
+          body: message.empty? ? nil : message.join('\n')
         )
       end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
     end
