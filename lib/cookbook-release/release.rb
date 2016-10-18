@@ -6,7 +6,10 @@ module CookbookRelease
       dir = File.dirname(file)
       version_file = File.join(dir, '.cookbook_version')
 
-      return File.read(version_file) if !GitUtilities.git?(dir) && File.exist?(version_file)
+      if !GitUtilities.git?(dir)
+        return File.read(version_file) if File.exist?(version_file)
+        raise "Can't determine version in a non-git environment without #{version_file}"
+      end
 
       r = Release.new(GitUtilities.new(cwd: dir))
       begin
