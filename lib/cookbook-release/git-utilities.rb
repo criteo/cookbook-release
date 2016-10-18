@@ -19,7 +19,7 @@ module CookbookRelease
     end
 
     def self.git?(dir)
-      @g.index.readable?
+      !@g.nil?
     end
 
     def reset_command(new_version)
