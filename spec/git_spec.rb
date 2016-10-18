@@ -12,6 +12,8 @@ describe CookbookRelease::GitUtilities do
     git init .
     git config user.email "you@example.com"
     git config user.name Hello
+    git commit --allow-empty -m 'none'
+    git tag 1.0.0
     EOH
     cmds.split("\n").each do |cmd|
       cmd = Mixlib::ShellOut.new(cmd)
@@ -65,10 +67,6 @@ describe CookbookRelease::GitUtilities do
   describe '.compute_last_release' do
     it 'finds the last release' do
       cmds = <<-EOH
-      touch toto
-      git add toto
-      git commit -m'none'
-      git tag 1.0.0
       git commit --allow-empty -m 'none'
       git tag 1.2.43
       git commit --allow-empty -m 'none'
@@ -88,10 +86,6 @@ describe CookbookRelease::GitUtilities do
   describe '.compute_changelog' do
     it 'find the proper changelog' do
       cmds = <<-EOH
-      touch toto
-      git add toto
-      git commit -m'none'
-      git tag 1.0.0
       git commit --allow-empty -m 'A commit'
       git commit --allow-empty -m 'Another commit'
       git commit --allow-empty -m 'A third one'
@@ -109,10 +103,6 @@ describe CookbookRelease::GitUtilities do
 
     it 'parse correctly commits' do
       cmds = <<-EOH
-      touch toto
-      git add toto
-      git commit -m'none'
-      git tag 1.0.0
       git commit --allow-empty -m "subject" -m "body"
       git commit --allow-empty -m "without body"
       EOH
@@ -127,6 +117,24 @@ describe CookbookRelease::GitUtilities do
       expect(changelog[1][:subject]).to eq('subject')
       expect(changelog[1][:body]).to eq('body')
       expect(changelog[0][:body]).to be_nil
+    end
+
+    it 'can use short sha' do
+      cmd = Mixlib::ShellOut.new('git commit --allow-empty -m "subject"')
+      cmd.run_command
+      cmd.error!
+
+      changelog = git.compute_changelog('HEAD~1', true)
+      expect(changelog[0][:hash].size).to eq(7)
+    end
+
+    it 'can use long sha' do
+      cmd = Mixlib::ShellOut.new('git commit --allow-empty -m "subject"')
+      cmd.run_command
+      cmd.error!
+
+      changelog = git.compute_changelog('HEAD~1', false)
+      expect(changelog[0][:hash].size).to eq(40)
     end
   end
 end
