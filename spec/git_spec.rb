@@ -29,6 +29,23 @@ describe CookbookRelease::GitUtilities do
 
   let(:git) { CookbookRelease::GitUtilities.new }
 
+  describe 'git directory' do
+    it 'detects non-git' do
+      tmp = Dir.mktmpdir('cookbook-release')
+      expect(CookbookRelease::GitUtilities.git?(tmp)).to be(false)
+      FileUtils.rm_rf(tmp)
+    end
+
+    it 'detects git' do
+      tmp = Dir.mktmpdir('cookbook-release')
+      cmd = Mixlib::ShellOut.new("git init #{tmp}")
+      cmd.run_command
+      cmd.error!
+      expect(CookbookRelease::GitUtilities.git?(tmp)).to be(true)
+      FileUtils.rm_rf(tmp)
+    end
+  end
+
   describe '.clean_index(?|!)' do
     it 'detects clean index' do
       expect(git.clean_index?).to be(true)
