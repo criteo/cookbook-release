@@ -106,5 +106,27 @@ describe CookbookRelease::GitUtilities do
       expect(changelog.size).to eq(3)
       expect(changelog.map {|c| c[:subject]}).to contain_exactly('A commit', 'Another commit', 'A third one')
     end
+
+    it 'parse correctly commits' do
+      cmds = <<-EOH
+      touch toto
+      git add toto
+      git commit -m'none'
+      git tag 1.0.0
+      git commit --allow-empty -m "subject" -m "body"
+      git commit --allow-empty -m "without body"
+      EOH
+      cmds.split("\n").each do |cmd|
+        cmd = Mixlib::ShellOut.new(cmd)
+        cmd.run_command
+        cmd.error!
+      end
+
+      changelog = git.compute_changelog('1.0.0')
+      expect(changelog.size).to eq(2)
+      expect(changelog[1][:subject]).to eq('subject')
+      expect(changelog[1][:body]).to eq('body')
+      expect(changelog[0][:body]).to be_nil
+    end
   end
 end
