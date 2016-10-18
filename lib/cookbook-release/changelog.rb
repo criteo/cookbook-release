@@ -4,6 +4,7 @@ module CookbookRelease
     DEFAULT_OPTS = {
       expand_major: true,
       expand_risky: true,
+      short_sha: true
     }
 
     def initialize(git, opts = {})
@@ -47,7 +48,7 @@ module CookbookRelease
 
     def changelog
       ref = ENV['RELEASE_BRANCH'] || 'origin/master'
-      @git.compute_changelog(ref)
+      @git.compute_changelog(ref, @opts[:short_sha])
     end
   end
 end
