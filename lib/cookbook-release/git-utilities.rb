@@ -69,7 +69,7 @@ module CookbookRelease
           author: commit.author.name,
           subject: message.delete_at(0),
           hash: short_sha ? commit.sha[0,7] : commit.sha,
-          body: message.empty? ? nil : message.join('\n')
+          body: message.empty? ? nil : message.join("\n")
         )
       end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
     end
