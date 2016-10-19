@@ -120,7 +120,7 @@ describe CookbookRelease::GitUtilities do
 
     it 'parse correctly commits' do
       cmds = <<-EOH
-      git commit --allow-empty -m "subject" -m "body"
+      git commit --allow-empty -m "subject" -m "body" -m "line2"
       git commit --allow-empty -m "without body"
       EOH
       cmds.split("\n").each do |cmd|
@@ -132,7 +132,7 @@ describe CookbookRelease::GitUtilities do
       changelog = git.compute_changelog('1.0.0')
       expect(changelog.size).to eq(2)
       expect(changelog[1][:subject]).to eq('subject')
-      expect(changelog[1][:body]).to eq('body')
+      expect(changelog[1][:body].lines).to include("body\n")
       expect(changelog[0][:body]).to be_nil
     end
 
