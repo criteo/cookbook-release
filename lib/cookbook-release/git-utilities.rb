@@ -8,6 +8,7 @@ module CookbookRelease
   class GitUtilities
 
     attr_accessor :no_prompt
+    attr_accessor :ignore_merge_commits
 
     def initialize(options={})
       @tag_prefix = options[:tag_prefix] || ''
@@ -69,9 +70,15 @@ module CookbookRelease
           author: commit.author.name,
           subject: message.delete_at(0),
           hash: short_sha ? commit.sha[0,7] : commit.sha,
-          body: message.empty? ? nil : message.join("\n")
+          body: message.empty? ? nil : message.join("\n"),
+          is_merge_commit: commit.parents.length > 1
         )
-      end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
+      end
+      commits.reject do |commit|
+        match_subject = commit[:subject] =~ /^Merge branch (.*) into/i
+        is_merge_commit = ignore_merge_commits && commit.is_merge_commit
+        match_subject || is_merge_commit
+      end
     end
 
     def tag(version)
