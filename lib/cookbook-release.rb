@@ -49,7 +49,6 @@ module CookbookRelease
           opts = {
             no_prompt: ENV['NO_PROMPT'],
             category: ENV['COOKBOOK_CATEGORY'],
-            ignore_merge_commits: ENV['IGNORE_MERGE_COMMITS']
           }
           git = GitUtilities.new
           Release.new(git, opts).release!
@@ -57,11 +56,8 @@ module CookbookRelease
 
         desc "Suggest new release version"
         task "release:suggest_version" do
-          opts = {
-            ignore_merge_commits: ENV['IGNORE_MERGE_COMMITS']
-          }
           git = GitUtilities.new
-          release = Release.new(git, opts)
+          release = Release.new(git)
           release.display_suggested_version(*release.new_version)
         end
 

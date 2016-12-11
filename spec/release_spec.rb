@@ -4,7 +4,6 @@ describe Release do
   let(:git) do
     g = double('git')
     allow(g).to receive(:no_prompt=)
-    allow(g).to receive(:ignore_merge_commits=)
     g
   end
 
@@ -37,8 +36,7 @@ describe Release do
                    :push_tag => true,
                   )
       allow(git).to receive(:no_prompt=)
-      allow(git).to receive(:ignore_merge_commits=)
-      release = Release.new(git, no_prompt: true, ignore_merge_commits: false)
+      release = Release.new(git, no_prompt: true)
 
       supermarket = double('supermarket')
       expect(CookbookRelease::Supermarket).to receive(:new).and_return(supermarket)

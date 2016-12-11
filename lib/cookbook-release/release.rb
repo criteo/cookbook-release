@@ -25,12 +25,10 @@ module CookbookRelease
     attr_reader :git
 
     def initialize(git, opts={})
-      @git                      = git
-      @no_prompt                = opts[:no_prompt]
-      @ignore_merge_commits     = opts[:ignore_merge_commits]
-      @git.no_prompt            = @no_prompt
-      @git.ignore_merge_commits = @ignore_merge_commits
-      @category                 = opts[:category] || 'Other'
+      @git         = git
+      @no_prompt   = opts[:no_prompt]
+      @git.no_prompt = @no_prompt
+      @category    = opts[:category] || 'Other'
     end
 
     def last_release
