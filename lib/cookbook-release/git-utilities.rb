@@ -63,15 +63,16 @@ module CookbookRelease
     end
 
     def compute_changelog(since, short_sha = true)
-      commits = @g.log.between(since, 'HEAD').map do |commit|
+      @g.log.between(since, 'HEAD').map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
           subject: message.delete_at(0),
           hash: short_sha ? commit.sha[0,7] : commit.sha,
-          body: message.empty? ? nil : message.join("\n")
+          body: message.empty? ? nil : message.join("\n"),
+          is_merge_commit: commit.parents.length > 1
         )
-      end.reject { |commit| commit[:subject] =~ /^Merge branch (.*) into/i }
+      end.reject { |commit| commit[:is_merge_commit] }
     end
 
     def tag(version)
