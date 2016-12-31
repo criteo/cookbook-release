@@ -82,6 +82,17 @@ describe CookbookRelease::GitUtilities do
   end
 
   describe '.compute_last_release' do
+    it 'finds the last release when major version is greater than 9' do
+      cmds = <<-EOH
+git commit --allow-empty -m 'none'
+git tag 1.2.3
+git commit --allow-empty -m 'none'
+git tag 12.34.56
+      EOH
+      cmds.split("\n").each { |cmd| ::Mixlib::ShellOut.new(cmd).run_command.error! }
+      expect(git.compute_last_release).to eq('12.34.56')
+    end
+
     it 'finds the last release' do
       cmds = <<-EOH
       git commit --allow-empty -m 'none'
