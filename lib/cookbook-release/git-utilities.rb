@@ -43,7 +43,7 @@ module CookbookRelease
       tag = Mixlib::ShellOut.new([
         'git describe',
         "--tags",
-        "--match \"#{@tag_prefix}[0-9]\.[0-9]*\.[0-9]*\""
+        "--match \"#{@tag_prefix}[0-9]*\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
       tag.stdout.split('-').first
