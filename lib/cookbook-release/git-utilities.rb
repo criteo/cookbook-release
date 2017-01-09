@@ -63,7 +63,7 @@ module CookbookRelease
     end
 
     def compute_changelog(since, short_sha = true)
-      @g.log.between(since, 'HEAD').map do |commit|
+      @g.log(500).between(since, 'HEAD').map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
