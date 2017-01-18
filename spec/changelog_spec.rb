@@ -9,8 +9,8 @@ describe CookbookRelease::Changelog do
 
     it 'colorize Risky commits in red' do
       expect(git).to receive(:compute_changelog).and_return([
-        CookbookRelease::Commit.new(hash: '654321', subject: '[Risky] hello', author: 'John Doe'),
-        CookbookRelease::Commit.new(hash: '123456', subject: 'hello', author: 'John Doe'),
+        CookbookRelease::Commit.new(hash: '654321', subject: '[Risky] hello', author: 'John Doe', email: 'j.doe@nobody.com'),
+        CookbookRelease::Commit.new(hash: '123456', subject: 'hello', author: 'John Doe', email: 'j.doe@nobody.com'),
       ])
       changelog = CookbookRelease::Changelog.new(git)
       expect(changelog.html).to match(/color=red((?!color=grey).)*Risky/m)
@@ -24,11 +24,12 @@ describe CookbookRelease::Changelog do
           CookbookRelease::Commit.new(
             hash: '123456',
             subject: 'hello',
-            author: 'John Doe')
+            author: 'John Doe',
+            email: 'j.doe@nobody.com')
         ]
       )
       changelog = CookbookRelease::Changelog.new(git)
-      expect(changelog.markdown).to eq('*123456* _John Doe_ `hello`')
+      expect(changelog.markdown).to eq('*123456* _John Doe <j.doe@nobody.com>_ `hello`')
     end
     it 'expand body' do
       expect(git).to receive(:compute_changelog).and_return(
@@ -37,6 +38,7 @@ describe CookbookRelease::Changelog do
             hash: '654321',
             subject: '[Risky] hello',
             author: 'John Doe',
+            email: 'j.doe@nobody.com',
             body: 'Some Men Just Want to Watch the World Burn')
         ]
       )

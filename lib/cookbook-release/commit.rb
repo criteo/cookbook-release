@@ -46,14 +46,14 @@ module CookbookRelease
     end
 
     def to_s_oneline
-      "#{self[:hash]} #{self[:author]} #{self[:subject]}"
+      "#{self[:hash]} #{self[:author]} <#{self[:email]}> #{self[:subject]}"
     end
 
     def to_s_html(full)
       result = []
       result << <<-EOH
 <font color=#{color.to_s}>
-  #{self[:hash]} #{self[:author]} #{self[:subject]}
+  #{self[:hash]} #{self[:author]} <#{self[:email]}> #{self[:subject]}
 </font>
       EOH
       if full && self[:body]
@@ -68,7 +68,7 @@ module CookbookRelease
     end
 
     def to_s_markdown(full)
-      result = "*#{self[:hash]}* _#{self[:author]}_ `#{self[:subject]}`"
+      result = "*#{self[:hash]}* _#{self[:author]} <#{self[:email]}>_ `#{self[:subject]}`"
       result << "\n```\n#{self[:body]}\n```" if full && self[:body]
       result
     end
