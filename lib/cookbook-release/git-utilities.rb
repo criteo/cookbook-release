@@ -67,6 +67,7 @@ module CookbookRelease
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
+          email: commit.author.email,
           subject: message.delete_at(0),
           hash: short_sha ? commit.sha[0,7] : commit.sha,
           body: message.empty? ? nil : message.join("\n"),

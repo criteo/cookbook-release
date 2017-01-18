@@ -59,14 +59,14 @@ module CookbookRelease
       puts "Suggested version: " + new_version.to_s
       puts "Commits that suggest this change:"
       reasons.each do |commit|
-        puts "* #{commit[:hash]} #{commit[:subject]} (#{commit[:author]})"
+        puts "* #{commit[:hash]} #{commit[:subject]} (#{commit[:author]} <#{commit[:email]}>)"
       end
     end
 
     def display_changelog(new_version)
       puts "Changelog for #{new_version}:"
       git_changelog.each do |commit|
-        puts "* #{commit[:hash]} #{HighLine.color(commit[:subject], commit.color)} (#{commit[:author]})"
+        puts "* #{commit[:hash]} #{HighLine.color(commit[:subject], commit.color)} (#{commit[:author]} <#{commit[:email]}>)"
       end
     end
 
