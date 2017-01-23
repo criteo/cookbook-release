@@ -32,12 +32,13 @@ One-time setup (for cookbooks)
 -----
 
 Include cookbook-release into your `Gemfile`.
+Put `metadata.rb` inside the `chefignore` file (required if berkshelf >= 5.4.0).
 
 Require cookbook-release into the `metadata.rb` file and replace the version by the helper:
 
 ```
 require 'cookbook-release'
-version          Release.current_version(__FILE__)
+version ::CookbookRelease::Release.current_version(__FILE__)
 ```
 
 Include the rake tasks in your Rakefile:
