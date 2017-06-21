@@ -31,8 +31,8 @@ describe CookbookRelease::Changelog do
       changelog = CookbookRelease::Changelog.new(git)
       expect(changelog.markdown).to eq('*123456* _John Doe <j.doe@nobody.com>_ `hello`')
     end
-    it 'expand body' do
-      expect(git).to receive(:compute_changelog).and_return(
+    context 'risky commit' do
+      let(:commit) do
         [
           CookbookRelease::Commit.new(
             hash: '654321',
@@ -41,9 +41,19 @@ describe CookbookRelease::Changelog do
             email: 'j.doe@nobody.com',
             body: 'Some Men Just Want to Watch the World Burn')
         ]
-      )
-      changelog = CookbookRelease::Changelog.new(git, expand_risky: true)
-      expect(changelog.markdown).to include("\n```\nSome Men Just Want")
+      end
+
+      it 'expands the body' do
+        expect(git).to receive(:compute_changelog).and_return(commit)
+        changelog = CookbookRelease::Changelog.new(git, expand_risky: true)
+        expect(changelog.markdown).to include("\n```\nSome Men Just Want")
+      end
+
+      it 'mentions the author' do
+        expect(git).to receive(:compute_changelog).and_return(commit)
+        changelog = CookbookRelease::Changelog.new(git, expand_risky: true)
+        expect(changelog.markdown).to start_with('*654321* @j.doe `[Risky] hello`')
+      end
     end
   end
 end
