@@ -68,7 +68,14 @@ module CookbookRelease
     end
 
     def to_s_markdown(full)
-      result = "*#{self[:hash]}* _#{self[:author]} <#{self[:email]}>_ `#{self[:subject]}`"
+      result = "*#{self[:hash]}* "
+      if self[:subject] =~ /risky|breaking/i
+        slack_user = self[:email].split('@')[0]
+        result << "@#{slack_user}"
+      else
+        result << "_#{self[:author]} <#{self[:email]}>_"
+      end
+      result << " `#{self[:subject]}`"
       result << "\n```\n#{self[:body]}\n```" if full && self[:body]
       result
     end
