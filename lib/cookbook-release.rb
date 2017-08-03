@@ -12,16 +12,32 @@ module CookbookRelease
 
     class RepoTask < ::Rake::TaskLib
       def initialize(opts = {}, &html_block)
-        desc "Display raw changelog between branches"
-        task "changelog:raw" do
+        desc 'Display raw changelog between branches'
+        task 'changelog:raw' do
           git = GitUtilities.new
           puts Changelog.new(git, opts).raw
         end
 
-        desc "Display html changelog between branches"
-        task "changelog:html" do
+        desc 'Display raw changelog between branches with risky commits on top'
+        task 'changelog:raw_priority' do
+          git = GitUtilities.new
+          puts Changelog.new(git, opts).raw_priority
+        end
+
+        desc 'Display html changelog between branches'
+        task 'changelog:html' do
           git = GitUtilities.new
           html = Changelog.new(git, opts).html
+          if block_given?
+            html = html_block.call(html)
+          end
+          puts html
+        end
+
+        desc 'Display html changelog between branches with risky commits on top'
+        task 'changelog:html_priority' do
+          git = GitUtilities.new
+          html = Changelog.new(git, opts).html_priority
           if block_given?
             html = html_block.call(html)
           end
@@ -32,6 +48,12 @@ module CookbookRelease
         task 'changelog:markdown' do
           git = GitUtilities.new
           puts Changelog.new(git, opts).markdown
+        end
+
+        desc 'Display markdown changelog between branches with risky commits on top'
+        task 'changelog:markdown_priority' do
+          git = GitUtilities.new
+          puts Changelog.new(git, opts).markdown_priority
         end
       end
     end
@@ -44,8 +66,8 @@ module CookbookRelease
 
       def define_tasks(namespaced)
 
-        desc "Prepare cookbook release and push tag to git"
-        task "release!" do
+        desc 'Prepare cookbook release and push tag to git'
+        task 'release!' do
           opts = {
             no_prompt: ENV['NO_PROMPT'],
             category: ENV['COOKBOOK_CATEGORY'],
@@ -54,22 +76,22 @@ module CookbookRelease
           Release.new(git, opts).release!
         end
 
-        desc "Suggest new release version"
-        task "release:suggest_version" do
+        desc 'Suggest new release version'
+        task 'release:suggest_version' do
           git = GitUtilities.new
           release = Release.new(git)
           release.display_suggested_version(*release.new_version)
         end
 
-        desc "Display last released version"
-        task "release:version" do
+        desc 'Display last released version'
+        task 'release:version' do
           git = GitUtilities.new
           release = Release.new(git)
           puts release.last_release
         end
 
-        desc "Display changelog since last release"
-        task "release:changelog" do
+        desc 'Display changelog since last release'
+        task 'release:changelog' do
           git = GitUtilities.new
           release = Release.new(git)
           release.display_changelog(release.new_version.first)
