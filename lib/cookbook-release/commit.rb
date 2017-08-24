@@ -59,7 +59,7 @@ module CookbookRelease
       if full && self[:body]
         result << <<-EOH
 <pre>
-#{self[:body]}
+#{strip_change_id(self[:body])}
 </pre>
         EOH
       end
@@ -76,8 +76,14 @@ module CookbookRelease
         result << "_#{self[:author]} <#{self[:email]}>_"
       end
       result << " `#{self[:subject]}`"
-      result << "\n```\n#{self[:body]}\n```" if full && self[:body]
+      result << "\n```\n#{strip_change_id(self[:body])}```" if full && self[:body]
       result
+    end
+
+    private
+
+    def strip_change_id(body)
+      body.each_line.reject {|l| l.starts_with?('Change-Id') }.join
     end
   end
 end
