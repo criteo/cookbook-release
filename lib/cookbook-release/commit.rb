@@ -83,7 +83,7 @@ module CookbookRelease
     private
 
     def strip_change_id(body)
-      body.each_line.reject {|l| l.starts_with?('Change-Id') }.join
+      body.each_line.reject {|l| l.start_with?('Change-Id') }.join
     end
   end
 end
