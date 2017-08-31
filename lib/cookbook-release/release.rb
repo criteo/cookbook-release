@@ -86,7 +86,13 @@ module CookbookRelease
     end
 
     def release!
-      new_version = prepare_release
+
+      new_version = begin
+                      prepare_release
+                    rescue ExistingRelease
+                      raise unless ENV['COOKBOOK_RELEASE_SILENT_FAIL']
+                      exit 0
+                    end
       begin
         git.tag(new_version)
         display_changelog(new_version)
