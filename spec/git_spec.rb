@@ -123,10 +123,29 @@ git tag 12.34.56
         cmd.run_command
         cmd.error!
       end
-
       changelog = git.compute_changelog('1.0.0')
       expect(changelog.size).to eq(3)
       expect(changelog.map {|c| c[:subject]}).to contain_exactly('A commit', 'Another commit', 'A third one')
+    end
+
+    it 'shows only sub_dir commits' do
+      cmds = <<-EOH
+      git commit --allow-empty -m "subject" -m "body" -m "line2"
+      git commit --allow-empty -m "without body"
+      mkdir -p subbie
+      echo "hello" > subbie/there
+      git add subbie/there
+      git commit -m "hello there"
+      EOH
+      sub_git = CookbookRelease::GitUtilities.new(sub_dir: 'subbie')
+      cmds.split("\n").each do |cmd|
+        cmd = Mixlib::ShellOut.new(cmd)
+        cmd.run_command
+        cmd.error!
+      end
+
+      changelog = sub_git.compute_changelog('1.0.0')
+      expect(changelog.size).to eq(1)
     end
 
     it 'parse correctly commits' do

@@ -77,4 +77,4 @@ require 'cookbook-release'
 CookbookRelease::Rake::RepoTask.new
 ```
 
-will allow to create tasks to generate html changelog between HEAD and master branch. It aims to make some changes more visible such as [Risky] tag (or any tag used for major changes).
+will allow to create tasks to generate html changelog between HEAD and master branch. It aims to make some changes more visible such as [Risky] tag (or any tag used for major changes). You may add a `sub_dir` parameter to restrict the scope of the changes to a sub-directory of the git root.

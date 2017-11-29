@@ -12,6 +12,7 @@ module CookbookRelease
     def initialize(options={})
       @tag_prefix = options[:tag_prefix] || ''
       cwd = options[:cwd] || Dir.pwd
+      @sub_dir = options[:sub_dir] # if nil takes the cwd
       @shellout_opts = {
         cwd: cwd
       }
@@ -63,7 +64,7 @@ module CookbookRelease
     end
 
     def compute_changelog(since, short_sha = true)
-      @g.log(500).between(since, 'HEAD').map do |commit|
+      @g.log(500).object(@sub_dir).between(since, 'HEAD').map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
