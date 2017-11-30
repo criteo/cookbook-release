@@ -1,8 +1,6 @@
 language: ruby
 rvm:
-  - 2.4.0
-before_install:
-  - rvm @global do gem install bundler -v 1.15.4
+  - 2.4
 deploy:
   provider: rubygems
   api_key:
