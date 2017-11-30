@@ -13,20 +13,21 @@ module CookbookRelease
     class RepoTask < ::Rake::TaskLib
       def initialize(opts = {}, &html_block)
         desc 'Display raw changelog between branches'
-        task 'changelog:raw' do
-          git = GitUtilities.new
+        task 'changelog:raw', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           puts Changelog.new(git, opts).raw
         end
 
         desc 'Display raw changelog between branches with risky commits on top'
-        task 'changelog:raw_priority' do
-          git = GitUtilities.new
+        task 'changelog:raw_priority', [:sub_dir] do |_, args|
+          git = GitUtilities.new(args)
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           puts Changelog.new(git, opts).raw_priority
         end
 
         desc 'Display html changelog between branches'
-        task 'changelog:html' do
-          git = GitUtilities.new
+        task 'changelog:html', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           html = Changelog.new(git, opts).html
           if block_given?
             html = html_block.call(html)
@@ -35,8 +36,8 @@ module CookbookRelease
         end
 
         desc 'Display html changelog between branches with risky commits on top'
-        task 'changelog:html_priority' do
-          git = GitUtilities.new
+        task 'changelog:html_priority', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           html = Changelog.new(git, opts).html_priority
           if block_given?
             html = html_block.call(html)
@@ -45,14 +46,14 @@ module CookbookRelease
         end
 
         desc 'Display markdown changelog between branches'
-        task 'changelog:markdown' do
-          git = GitUtilities.new
+        task 'changelog:markdown', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           puts Changelog.new(git, opts).markdown
         end
 
         desc 'Display markdown changelog between branches with risky commits on top'
-        task 'changelog:markdown_priority' do
-          git = GitUtilities.new
+        task 'changelog:markdown_priority', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
           puts Changelog.new(git, opts).markdown_priority
         end
       end
