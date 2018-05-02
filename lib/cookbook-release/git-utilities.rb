@@ -72,7 +72,10 @@ module CookbookRelease
           subject: message.delete_at(0),
           hash: short_sha ? commit.sha[0,7] : commit.sha,
           body: message.empty? ? nil : message.join("\n"),
-          is_merge_commit: commit.parents.length > 1
+          is_merge_commit: commit.parents.length > 1,
+          nodes_only: @g.diff(commit.sha, "#{commit.sha}~1").name_status.reject do |path, change_type|
+            path.include?('nodes/') && ['A', 'D'].include?(change_type) # basic node additions or deletions only
+          end.count.zero?
         )
       end.reject { |commit| commit[:is_merge_commit] }
     end

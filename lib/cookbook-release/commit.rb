@@ -34,6 +34,10 @@ module CookbookRelease
       !!(self[:subject] =~ /\[risky\]/i)
     end
 
+    def nodes_only?
+      self[:nodes_only]
+    end
+
     def color
       case true
       when major?

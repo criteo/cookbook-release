@@ -4,11 +4,13 @@ module CookbookRelease
     DEFAULT_OPTS = {
       expand_major: true,
       expand_risky: true,
+      separate_nodes: true,
       short_sha: true
     }
 
     RISKY = 'RISKY/BREAKING (details below):'
     NO_RISKY = 'NO RISKY/BREAKING COMMITS. READ FULL CHANGELOG.'
+    NON_NODES_ONLY = 'Non-risky/major, Non-node-only commits'
     FULL = 'Full changelog:'
     DETAILS = 'Details of risky commits:'
 
@@ -42,6 +44,7 @@ module CookbookRelease
       result << changelog.map do |c|
         full_body ||= @opts[:expand_major] && c.major?
         full_body ||= @opts[:expand_risky] && c.risky?
+        full_body ||= @opts[:separate_nodes] && c.nodes_only?
         full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
         c.to_s_html(full_body)
       end.map { |c| "    <p>#{c}</p>" }
@@ -81,6 +84,8 @@ module CookbookRelease
       changelog.map do |c|
         full_body ||= @opts[:expand_major] && c.major?
         full_body ||= @opts[:expand_risky] && c.risky?
+        full_body ||= @opts[:separate_nodes] && c.nodes_only?
+        full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
         full_body ||= @opts[:expand_commit] && (c[:subject] =~ @opts[:expand_commit] || c[:body] =~ @opts[:expand_commit])
         c.to_s_markdown(full_body)
       end.join("\n")
@@ -96,6 +101,28 @@ module CookbookRelease
       end
       result << "*#{FULL}*\n"
       result << changelog.map { |c| c.to_s_markdown(false) }.join("\n")
+      if risky_commits.any?
+        result << "\n#{DETAILS}\n"
+        result << risky_commits.map { |c| c.to_s_markdown(true) }.join("\n")
+      end
+      result
+    end
+
+    def markdown_priority_nodes
+      cl = changelog
+      risky_commits = cl.select { |c| c.risky? || c.major? }
+      not_nodes_only_commits = cl.reject { |c| c.nodes_only? || c.risky? || c.major? }
+      result = []
+      if risky_commits.any?
+        result << "*#{RISKY}*\n" << risky_commits.map { |c| c.to_s_markdown(false) }.join("\n") << "\n"
+      else
+        result << "*#{NO_RISKY}*\n\n"
+      end
+      if not_nodes_only_commits.any?
+        result << "*#{NON_NODES_ONLY}*\n" << not_nodes_only_commits.map { |c| c.to_s_markdown(false) }.join("\n") << "\n"
+      end
+      result << "*#{FULL}*\n"
+      result << cl.map { |c| c.to_s_markdown(false) }.join("\n")
       if risky_commits.any?
         result << "\n#{DETAILS}\n"
         result << risky_commits.map { |c| c.to_s_markdown(true) }.join("\n")

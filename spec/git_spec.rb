@@ -183,5 +183,32 @@ git tag 12.34.56
       changelog = git.compute_changelog('HEAD~1', false)
       expect(changelog[0][:hash].size).to eq(40)
     end
+
+    it 'detects node-only commits' do
+      cmds = <<-EOH
+      mkdir -p nodes/preprod
+      echo "hello first" > nodes/preprod/tata.rb
+      git add nodes/preprod/tata.rb
+      git commit -m "hello there"
+      echo "hello second" > nodes/preprod/tata.rb
+      git add nodes/preprod/tata.rb
+      git commit -m "hello there modify"
+      mkdir -p toto
+      echo "hello" > toto/titi.rb
+      git add toto/titi.rb
+      git commit -m "subject" -m "body" -m "line2"
+      EOH
+      cmds.split("\n").each do |cmd|
+        cmd = Mixlib::ShellOut.new(cmd)
+        cmd.run_command
+        cmd.error!
+      end
+
+      git = CookbookRelease::GitUtilities.new
+      changelog = git.compute_changelog('HEAD~3')
+      expect(changelog[0][:nodes_only]).to be false # Add a non-"nodes" file
+      expect(changelog[1][:nodes_only]).to be false # Modify a "nodes" file
+      expect(changelog[2][:nodes_only]).to be true # Add a "nodes" file
+    end
   end
 end
