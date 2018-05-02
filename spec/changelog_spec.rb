@@ -55,5 +55,40 @@ describe CookbookRelease::Changelog do
         expect(changelog.markdown).to start_with('*654321* @j.doe `[Risky] hello`')
       end
     end
+    context 'Separates risky and non-risky+non-nodes' do
+      let(:commits) do
+        [
+          CookbookRelease::Commit.new(
+            hash: '654321',
+            subject: 'hello',
+            author: 'John Doe',
+            email: 'j.doe@nobody.com',
+            body: 'New Men Just Want to Watch the World Burn',
+            nodes_only: false),
+          CookbookRelease::Commit.new(
+            hash: '654321',
+            subject: '[Risky] hello',
+            author: 'John Doe',
+            email: 'j.doe@nobody.com',
+            body: 'Some Men Just Want to Watch the World Turn',
+            nodes_only: true),
+          CookbookRelease::Commit.new(
+            hash: '654321',
+            subject: 'hello only nodes',
+            author: 'John Doe',
+            email: 'j.doe@nobody.com',
+            body: 'Old Men Just Want to Watch the World Learn',
+            nodes_only: true)
+        ]
+      end
+
+      it 'expands the body with non-risky+non-nodes' do
+        expect(git).to receive(:compute_changelog).and_return(commits)
+        changelog = CookbookRelease::Changelog.new(git, expand_risky: true, nodes_only: true)
+        expect(changelog.markdown_priority_nodes.join('')).to include(
+          "\n*Non-risky/major, Non-node-only commits*\n*654321* _John Doe <j.doe@nobody.com>_ `hello`\n*Full"
+        )
+      end
+    end
   end
 end

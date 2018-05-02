@@ -56,6 +56,12 @@ module CookbookRelease
           git = GitUtilities.new('sub_dir': args['sub_dir'])
           puts Changelog.new(git, opts).markdown_priority
         end
+
+        desc 'Display markdown changelog between branches with risky commits on top and non-node-only changes separated'
+        task 'changelog:markdown_priority_nodes', [:sub_dir] do |_, args|
+          git = GitUtilities.new('sub_dir': args['sub_dir'])
+          puts Changelog.new(git, opts).markdown_priority_nodes
+        end
       end
     end
 
