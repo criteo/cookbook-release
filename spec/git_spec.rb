@@ -150,8 +150,8 @@ git tag 12.34.56
 
     it 'parse correctly commits' do
       cmds = <<-EOH
-      git commit --allow-empty -m "subject" -m "body" -m "line2"
-      git commit --allow-empty -m "without body"
+      git commit --allow-empty --no-verify -m "subject" -m "body" -m "line2"
+      git commit --allow-empty --no-verify -m "without body"
       EOH
       cmds.split("\n").each do |cmd|
         cmd = Mixlib::ShellOut.new(cmd)
