@@ -23,4 +23,16 @@ describe CookbookRelease::Commit do
       expect(minor_change)   .not_to be_patch
     end
   end
+
+  describe '.to_s_markdown' do
+    it 'surrounds subject with backticks' do
+      commit = CookbookRelease::Commit.new(subject: 'This is a fix', hash: 'abcdef', author: 'Linus', email: 'linus@linux.org')
+      expect(commit.to_s_markdown(false)).to match(/`#{commit[:subject]}`/)
+    end
+
+    it 'properly handle emojis' do
+      commit = CookbookRelease::Commit.new(subject: 'This is a fix 🔧 and I love 🪐🚀', hash: 'abcdef', author: 'Linus', email: 'linus@linux.org')
+      expect(commit.to_s_markdown(false)).to match(/`This is a fix` 🔧 `and I love` 🪐🚀/)
+    end
+  end
 end
