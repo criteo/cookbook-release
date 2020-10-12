@@ -11,6 +11,7 @@ module CookbookRelease
     RISKY = 'RISKY/BREAKING (details below):'
     NO_RISKY = 'NO RISKY/BREAKING COMMITS. READ FULL CHANGELOG.'
     NON_NODES_ONLY = 'Non-risky/major, Non-node-only commits'
+    NODES_ONLY = 'Commits impacting only nodes'
     FULL = 'Full changelog:'
     DETAILS = 'Details of risky commits:'
 
@@ -109,28 +110,53 @@ module CookbookRelease
     end
 
     def markdown_priority_nodes
-      cl = changelog
-      risky_commits = cl.select { |c| c.risky? || c.major? }
-      not_nodes_only_commits = cl.reject { |c| c.nodes_only? || c.risky? || c.major? }
       result = []
-      if risky_commits.any?
-        result << "*#{RISKY}*\n" << risky_commits.map { |c| c.to_s_markdown(false) }.join("\n") << "\n"
-      else
-        result << "*#{NO_RISKY}*\n\n"
-      end
-      if not_nodes_only_commits.any?
-        result << "*#{NON_NODES_ONLY}*\n" << not_nodes_only_commits.map { |c| c.to_s_markdown(false) }.join("\n") << "\n"
-      end
-      result << "*#{FULL}*\n"
-      result << cl.map { |c| c.to_s_markdown(false) }.join("\n")
-      if risky_commits.any?
-        result << "\n#{DETAILS}\n"
-        result << risky_commits.map { |c| c.to_s_markdown(true) }.join("\n")
-      end
+      result << append_risky(changelog)
+      result << append_by_impact(changelog)
+      result << append_risky_details(changelog)
       result
     end
 
     private
+
+    # @param changelog [Array<Commit>]
+    # @return [String] a string describing the changelog
+    def append_by_impact(changelog)
+      not_nodes_only_commits = changelog.reject { |c| c.nodes_only? || c.risky? || c.major? }
+      nodes_only_commits = changelog.select(&:nodes_only?)
+      output = []
+      if not_nodes_only_commits.any?
+        txt = not_nodes_only_commits.map { |c| c.to_s_markdown(false) }.join("\n")
+        output << "*#{NON_NODES_ONLY}*\n#{txt}\n"
+      end
+      if nodes_only_commits.any?
+        txt = nodes_only_commits.map { |c| c.to_s_markdown(false) }.join("\n")
+        output << "*#{NODES_ONLY}*\n#{txt}\n"
+      end
+      output.join
+    end
+
+    # @param changelog [Array<Commit>]
+    # @return [String] a string describing the changelog
+    def append_risky_details(changelog)
+      risky_commits = changelog.select { |c| c.risky? || c.major? }
+      if risky_commits.any?
+        "\n#{DETAILS}\n" + risky_commits.map { |c| c.to_s_markdown(true) }.join("\n")
+      else
+        ''
+      end
+    end
+
+    # @param changelog [Array<Commit>]
+    # @return [String] a string describing the changelog
+    def append_risky(changelog)
+      risky_commits = changelog.select { |c| c.risky? || c.major? }
+      if risky_commits.any?
+        "*#{RISKY}*\n" << risky_commits.map { |c| c.to_s_markdown(false) }.join("\n") << "\n"
+      else
+        "*#{NO_RISKY}*\n\n"
+      end
+    end
 
     def changelog
       ref = ENV['RELEASE_BRANCH'] || 'origin/master'

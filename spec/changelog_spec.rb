@@ -83,10 +83,10 @@ describe CookbookRelease::Changelog do
       end
 
       it 'expands the body with non-risky+non-nodes' do
-        expect(git).to receive(:compute_changelog).and_return(commits)
+        expect(git).to receive(:compute_changelog).and_return(commits).at_least(:once)
         changelog = CookbookRelease::Changelog.new(git, expand_risky: true, nodes_only: true)
         expect(changelog.markdown_priority_nodes.join('')).to include(
-          "\n*Non-risky/major, Non-node-only commits*\n*654321* _John Doe <j.doe@nobody.com>_ `hello`\n*Full"
+          "\n*Non-risky/major, Non-node-only commits*\n*654321* _John Doe <j.doe@nobody.com>_ `hello`\n*Commits impacting only nodes"
         )
       end
     end
