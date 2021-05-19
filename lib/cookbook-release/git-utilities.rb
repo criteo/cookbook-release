@@ -43,11 +43,12 @@ module CookbookRelease
     def _compute_last_release
       tag = Mixlib::ShellOut.new([
         'git describe',
+        "--abbrev=0",
         "--tags",
         "--match \"#{@tag_prefix}[0-9]*\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
-      tag.stdout.split('-').first
+      tag.stdout.chomp
     end
 
     def has_any_release?
