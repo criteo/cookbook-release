@@ -48,7 +48,7 @@ module CookbookRelease
         "--match \"#{@tag_prefix}[0-9]*\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
-      tag.stdout.chomp
+      tag.stdout.sub(/^#{@tag_prefix}/, '').chomp
     end
 
     def has_any_release?
@@ -65,7 +65,8 @@ module CookbookRelease
     end
 
     def compute_changelog(since, short_sha = true)
-      @g.log(500).object(@sub_dir).between(since, 'HEAD').map do |commit|
+      ref = "#{@tag_prefix}#{since}"
+      @g.log(500).object(@sub_dir).between(ref, 'HEAD').map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
