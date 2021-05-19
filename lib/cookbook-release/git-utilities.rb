@@ -23,6 +23,12 @@ module CookbookRelease
       File.directory?(::File.join(dir, '.git'))
     end
 
+    def self.find_root(dir = Dir.pwd)
+      cmd = Mixlib::ShellOut.new("git rev-parse --show-toplevel", cwd: dir)
+      cmd.run_command
+      cmd.error? ? nil : cmd.stdout.chomp
+    end
+
     def reset_command(new_version)
       remote = choose_remote
       "git tag -d #{new_version} ; git push #{remote} :#{new_version}"
