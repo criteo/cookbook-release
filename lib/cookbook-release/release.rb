@@ -5,13 +5,20 @@ module CookbookRelease
     def self.current_version(file)
       dir = File.dirname(file)
       version_file = File.join(dir, '.cookbook_version')
+      git_root = GitUtilities.find_root(dir)
 
-      if !GitUtilities.git?(dir)
+      if !GitUtilities.git?(dir) && git_root.nil?
         return File.read(version_file) if File.exist?(version_file)
         raise "Can't determine version in a non-git environment without #{version_file}"
       end
 
-      r = Release.new(GitUtilities.new(cwd: dir))
+      git = if git_root == dir
+              GitUtilities.new(cwd: dir)
+            else
+              GitUtilities.new(tag_prefix: "#{File.basename(dir)}-", sub_dir: dir)
+            end
+
+      r = Release.new(git)
       begin
         r.new_version.first
       rescue ExistingRelease
