@@ -23,6 +23,12 @@ module CookbookRelease
       File.directory?(::File.join(dir, '.git'))
     end
 
+    def self.find_root(dir = Dir.pwd)
+      cmd = Mixlib::ShellOut.new("git rev-parse --show-toplevel", cwd: dir)
+      cmd.run_command
+      cmd.error? ? nil : cmd.stdout.chomp
+    end
+
     def reset_command(new_version)
       remote = choose_remote
       "git tag -d #{new_version} ; git push #{remote} :#{new_version}"
@@ -43,11 +49,12 @@ module CookbookRelease
     def _compute_last_release
       tag = Mixlib::ShellOut.new([
         'git describe',
+        "--abbrev=0",
         "--tags",
         "--match \"#{@tag_prefix}[0-9]*\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
-      tag.stdout.split('-').first
+      tag.stdout.sub(/^#{@tag_prefix}/, '').chomp
     end
 
     def has_any_release?
@@ -64,7 +71,8 @@ module CookbookRelease
     end
 
     def compute_changelog(since, short_sha = true)
-      @g.log(500).object(@sub_dir).between(since, 'HEAD').map do |commit|
+      ref = "#{@tag_prefix}#{since}"
+      @g.log(500).object(@sub_dir).between(ref, 'HEAD').map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,

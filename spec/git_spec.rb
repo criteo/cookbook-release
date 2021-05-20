@@ -44,6 +44,12 @@ describe CookbookRelease::GitUtilities do
       expect(CookbookRelease::GitUtilities.git?(tmp)).to be(true)
       FileUtils.rm_rf(tmp)
     end
+
+    it 'finds repo\'s root from subdir' do
+      subdir = 'cookbooks/mycookbook'
+      FileUtils.mkdir_p(subdir)
+      expect(CookbookRelease::GitUtilities.find_root(subdir)).to eq(Dir.pwd)
+    end
   end
 
   describe '.clean_index(?|!)' do
