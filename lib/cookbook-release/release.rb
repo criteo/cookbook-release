@@ -15,7 +15,7 @@ module CookbookRelease
       git = if git_root == dir
               GitUtilities.new(cwd: dir)
             else
-              GitUtilities.new(tag_prefix: "#{File.basename(dir)}-", sub_dir: dir)
+              GitUtilities.new(cwd: git_root, tag_prefix: "#{File.basename(dir)}-", sub_dir: dir)
             end
 
       r = Release.new(git)
