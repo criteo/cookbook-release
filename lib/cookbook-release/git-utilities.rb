@@ -54,7 +54,8 @@ module CookbookRelease
         "--match \"#{@tag_prefix}[0-9]*\.[0-9]*\.[0-9]*\""
       ].join(" "), @shellout_opts)
       tag.run_command
-      tag.stdout.sub(/^#{@tag_prefix}/, '').chomp
+      rel = tag.stdout.sub(/^#{@tag_prefix}/, '').chomp
+      rel.empty? ? nil : rel
     end
 
     def has_any_release?
