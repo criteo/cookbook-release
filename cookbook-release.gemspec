@@ -6,7 +6,7 @@ require 'English'
 
 Gem::Specification.new do |spec|
   spec.name          = 'cookbook-release'
-  spec.version       = '1.5.1'
+  spec.version       = '1.6.0'
   spec.authors       = ['Grégoire Seux']
   spec.email         = 'g.seux@criteo.com'
   spec.summary       = 'Provide primitives (and rake tasks) to release a cookbook'
@@ -22,7 +22,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'semantic'
   spec.add_dependency 'highline'
   spec.add_dependency 'mixlib-shellout'
-  spec.add_dependency 'chef', '>= 12.18.31'
+  # TODO: support Chef 17 and leverage knife gem at some point
+  spec.add_dependency 'chef', '>= 12.18.31', '< 17.0' # knife code has been moved to dedicated gem starting with Chef 17
   spec.add_dependency 'git-ng' # see https://github.com/schacon/ruby-git/issues/307
   spec.add_dependency 'unicode-emoji'
 
