@@ -45,9 +45,18 @@ describe CookbookRelease::GitUtilities do
       FileUtils.rm_rf(tmp)
     end
 
-    it 'finds repo\'s root from subdir' do
+    it 'do not finds repo\'s root from untracked subdir' do
       subdir = 'cookbooks/mycookbook'
       FileUtils.mkdir_p(subdir)
+      expect(CookbookRelease::GitUtilities.find_root(subdir)).to be nil
+    end
+
+    it 'finds repo\'s root from tracked subdir' do
+      subdir = 'cookbooks/mycookbook'
+      tracked_file = ::File.join(subdir, 'tracked_file')
+      FileUtils.mkdir_p(subdir)
+      FileUtils.touch(tracked_file)
+      ::Mixlib::ShellOut.new("git add '#{tracked_file}'").run_command
       expect(CookbookRelease::GitUtilities.find_root(subdir)).to eq(Dir.pwd)
     end
   end
