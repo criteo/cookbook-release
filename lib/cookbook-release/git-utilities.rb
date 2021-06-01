@@ -24,6 +24,9 @@ module CookbookRelease
     end
 
     def self.find_root(dir = Dir.pwd)
+      # Do not consider given dir as part of the git repo if not in git hierarchy or dir is not tracked
+      return if ::Mixlib::ShellOut.new('git ls-files --error-unmatch .', cwd: dir).run_command.error?
+
       cmd = Mixlib::ShellOut.new("git rev-parse --show-toplevel", cwd: dir)
       cmd.run_command
       cmd.error? ? nil : cmd.stdout.chomp
