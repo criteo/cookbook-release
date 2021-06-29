@@ -8,7 +8,7 @@ require 'json'
 module CookbookRelease
   class Supermarket
 
-    # This code is adapted from "knife cookbook share" and travis dpl provider 
+    # This code is adapted from "knife cookbook share" and travis dpl provider
     # for supermarket.
 
     def initialize(opts={})
@@ -20,11 +20,11 @@ module CookbookRelease
 
     include ::Chef::Mixin::ShellOut
 
-    def publish_ck(category)
-      ck = ::Chef::Cookbook::CookbookVersionLoader.new('.')
+    def publish_ck(category, path = nil)
+      ck = ::Chef::Cookbook::CookbookVersionLoader.new(path || '.')
       ck.load!
       cookbook = ck.cookbook_version
-      # we have to provide a rest option otherwise it will try to load a 
+      # we have to provide a rest option otherwise it will try to load a
       # client.pem key
       ::Chef::CookbookUploader.new(cookbook, rest: 'fake_rest').validate_cookbooks
 
