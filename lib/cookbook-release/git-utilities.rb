@@ -8,6 +8,7 @@ module CookbookRelease
   class GitUtilities
 
     attr_accessor :no_prompt
+    attr_reader :sub_dir
 
     def initialize(options={})
       @tag_prefix = options[:tag_prefix] || ''

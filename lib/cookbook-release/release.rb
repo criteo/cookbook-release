@@ -108,7 +108,7 @@ module CookbookRelease
         exit 1 unless agreed
         git.push_tag(new_version)
         supermarket = Supermarket.new
-        supermarket.publish_ck(@category)
+        supermarket.publish_ck(@category, git.sub_dir)
       rescue
         puts HighLine.color("Release aborted, you have to reset to previous state manually", :red)
         puts ":use with care: #{git.reset_command(new_version)}"
