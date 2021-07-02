@@ -36,12 +36,13 @@ describe Release do
                    :push_tag => true,
                   )
       allow(git).to receive(:no_prompt=)
+      allow(git).to receive(:sub_dir).and_return(nil)
       release = Release.new(git, no_prompt: true)
 
       supermarket = double('supermarket')
       expect(CookbookRelease::Supermarket).to receive(:new).and_return(supermarket)
 
-      expect(supermarket).to receive(:publish_ck).with('Other')
+      expect(supermarket).to receive(:publish_ck).with('Other', nil)
       release.release!
     end
   end
