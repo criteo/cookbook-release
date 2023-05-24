@@ -78,6 +78,7 @@ module CookbookRelease
           opts = {
             no_prompt: ENV['NO_PROMPT'],
             category: ENV['COOKBOOK_CATEGORY'],
+            skip_upload: ENV['SKIP_COOKOOK_UPLOAD']
           }
           git = GitUtilities.new
           Release.new(git, opts).release!

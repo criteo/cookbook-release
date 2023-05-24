@@ -63,6 +63,7 @@ Optional environment variables:
 
 ```
 export COOKBOOK_CATEGORY="Other" # defaults to Other
+export SKIP_COOKOOK_UPLOAD=true #Just prepare release and push tag to git, but don't upload
 ```
 
 Note: this setup is intended to be used in a CI system such as jenkins or travis.
