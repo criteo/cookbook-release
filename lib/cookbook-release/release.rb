@@ -34,6 +34,7 @@ module CookbookRelease
     def initialize(git, opts={})
       @git         = git
       @no_prompt   = opts[:no_prompt]
+      @skip_upload   = opts[:skip_upload]
       @git.no_prompt = @no_prompt
       @category    = opts[:category] || 'Other'
     end
@@ -108,7 +109,7 @@ module CookbookRelease
         exit 1 unless agreed
         git.push_tag(new_version)
         supermarket = Supermarket.new
-        supermarket.publish_ck(@category, git.sub_dir)
+        supermarket.publish_ck(@category, git.sub_dir) unless @skip_upload
       rescue
         puts HighLine.color("Release aborted, you have to reset to previous state manually", :red)
         puts ":use with care: #{git.reset_command(new_version)}"
