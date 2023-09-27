@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mixlib-shellout'
   # TODO: support Chef 17 and leverage knife gem at some point
   spec.add_dependency 'chef', '>= 12.18.31', '< 17.0' # knife code has been moved to dedicated gem starting with Chef 17
-  spec.add_dependency 'git-ng' # see https://github.com/schacon/ruby-git/issues/307
+  spec.add_dependency 'git'
   spec.add_dependency 'unicode-emoji'
 
 
