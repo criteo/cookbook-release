@@ -1,7 +1,7 @@
 require 'chef/cookbook_loader'
 require 'chef/cookbook/cookbook_version_loader'
 require 'chef/cookbook_uploader'
-require 'chef/cookbook_site_streaming_uploader'
+require 'chef/knife/core/cookbook_site_streaming_uploader'
 require 'chef/mixin/shell_out'
 require 'json'
 
@@ -28,7 +28,7 @@ module CookbookRelease
       # client.pem key
       ::Chef::CookbookUploader.new(cookbook, rest: 'fake_rest').validate_cookbooks
 
-      tmp_cookbook_dir = Chef::CookbookSiteStreamingUploader.create_build_dir(cookbook)
+      tmp_cookbook_dir = ::Chef::Knife::Core::CookbookSiteStreamingUploader.create_build_dir(cookbook)
       begin
         shell_out!("tar -czf #{cookbook.name}.tgz #{cookbook.name}", :cwd => tmp_cookbook_dir)
       rescue StandardError => e
@@ -46,7 +46,7 @@ module CookbookRelease
     end
 
     def upload(filename, category)
-      http_resp = ::Chef::CookbookSiteStreamingUploader.post(
+      http_resp = ::Chef::Knife::Core::CookbookSiteStreamingUploader.post(
         @url,
         @user_id,
         @client_key,

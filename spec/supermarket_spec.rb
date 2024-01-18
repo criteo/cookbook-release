@@ -39,7 +39,7 @@ version          '2.0.0'
         body: "{}",
         code: "201"
       )
-      expect(::Chef::CookbookSiteStreamingUploader).
+      expect(::Chef::Knife::Core::CookbookSiteStreamingUploader).
         to receive(:post).
         with('http://a_url', 'a_name', 'a_file', anything()).
         and_return(response)
