@@ -6,7 +6,7 @@ require 'English'
 
 Gem::Specification.new do |spec|
   spec.name          = 'cookbook-release'
-  spec.version       = '2.0.0'
+  spec.version       = '2.0.1'
   spec.authors       = ['Grégoire Seux']
   spec.email         = 'g.seux@criteo.com'
   spec.summary       = 'Provide primitives (and rake tasks) to release a cookbook'
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mixlib-shellout'
   spec.add_dependency 'chef', '>= 17'
   spec.add_dependency 'knife', '>= 17'
-  spec.add_dependency 'git'
+  spec.add_dependency 'git', '~> 4.0'
   spec.add_dependency 'unicode-emoji'
 
 
