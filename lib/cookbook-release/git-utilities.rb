@@ -77,7 +77,7 @@ module CookbookRelease
 
     def compute_changelog(since, short_sha = true)
       ref = "#{@tag_prefix}#{since}"
-      @g.log(500).object(@sub_dir).between(ref, 'HEAD').map do |commit|
+      @g.log(500).object(@sub_dir).between(ref, 'HEAD').execute.map do |commit|
         message = commit.message.lines.map(&:chomp).compact.delete_if(&:empty?)
         Commit.new(
           author: commit.author.name,
