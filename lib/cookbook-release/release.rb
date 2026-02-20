@@ -1,3 +1,7 @@
+require 'highline/import'
+require_relative 'git-utilities'
+require_relative 'supermarket'
+
 module CookbookRelease
   class Release
 
