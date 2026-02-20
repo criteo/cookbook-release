@@ -44,7 +44,7 @@ version ::CookbookRelease::Release.current_version(__FILE__)
 Include the rake tasks in your Rakefile:
 
 ```
-require 'cookbook-release'
+require 'cookbook-release/rake_tasks'
 CookbookRelease::Rake::CookbookTask.new
 ```
 
@@ -74,7 +74,7 @@ Changelog generation for chef-repositories
 
 Using:
 ```
-require 'cookbook-release'
+require 'cookbook-release/rake_tasks'
 CookbookRelease::Rake::RepoTask.new
 ```
 
