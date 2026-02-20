@@ -6,7 +6,7 @@ require 'English'
 
 Gem::Specification.new do |spec|
   spec.name          = 'cookbook-release'
-  spec.version       = '2.0.2'
+  spec.version       = '3.0.0'
   spec.authors       = ['Grégoire Seux']
   spec.email         = 'g.seux@criteo.com'
   spec.summary       = 'Provide primitives (and rake tasks) to release a cookbook'
@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'knife', '>= 17'
   spec.add_dependency 'git', '~> 4.0'
   spec.add_dependency 'unicode-emoji'
-
 
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rspec_junit_formatter'
