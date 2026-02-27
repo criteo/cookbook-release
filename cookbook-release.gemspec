@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mixlib-shellout'
   spec.add_dependency 'chef', '>= 17'
   spec.add_dependency 'knife', '>= 17'
-  spec.add_dependency 'git'
+  spec.add_dependency 'git', '~> 4.0'
   spec.add_dependency 'unicode-emoji'
 
 
