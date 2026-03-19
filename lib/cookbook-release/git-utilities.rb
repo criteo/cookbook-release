@@ -3,6 +3,7 @@ require 'semantic/core_ext'
 require 'mixlib/shellout'
 require 'highline/import'
 require 'git'
+require_relative 'commit'
 
 module CookbookRelease
   class GitUtilities
