@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'chef', '>= 17'
   spec.add_dependency 'knife', '>= 17'
   spec.add_dependency 'git', '~> 4.0'
-  spec.add_dependency 'unicode-emoji'
 
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rspec_junit_formatter'
