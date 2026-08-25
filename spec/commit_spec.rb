@@ -30,9 +30,9 @@ describe CookbookRelease::Commit do
       expect(commit.to_s_markdown(false)).to match(/`#{commit[:subject]}`/)
     end
 
-    it 'properly handle emojis' do
+    it 'keeps emojis inside the backticks' do
       commit = CookbookRelease::Commit.new(subject: 'This is a fix 🔧 and I love 🪐🚀', hash: 'abcdef', author: 'Linus', email: 'linus@linux.org')
-      expect(commit.to_s_markdown(false)).to match(/`This is a fix` 🔧 `and I love` 🪐🚀/)
+      expect(commit.to_s_markdown(false)).to match(/`This is a fix 🔧 and I love 🪐🚀`/)
     end
   end
 end

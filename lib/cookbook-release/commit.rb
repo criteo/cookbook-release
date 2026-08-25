@@ -1,5 +1,4 @@
 require 'forwardable'
-require 'unicode/emoji'
 
 module CookbookRelease
   class Commit
@@ -83,17 +82,9 @@ module CookbookRelease
         result << "_#{self[:author]} <#{self[:email]}>_"
       end
       result << ' '
-      result << backtick_string(self[:subject])
+      result << "`#{self[:subject]}`"
       result << "\n```\n#{strip_change_id(self[:body])}```" if full && self[:body]
       result
-    end
-
-    def backtick_string(input)
-      s = input.gsub(/( )?(#{Unicode::Emoji::REGEX})( )?/, '` \2 `')
-               .gsub(/( )?``( )?/, '')
-      s += '`' unless s =~ /`$/
-      s = '`' + s unless s =~ /^`/
-      s
     end
 
     private
